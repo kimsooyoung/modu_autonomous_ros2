@@ -103,8 +103,11 @@ class RobotController(Node):
         self.cv_image = None # Actual Image data
         self.ctrl_msg = Twist() # Robot control commands (twist)
         self.start_time = self.get_clock().now() # Record current time in seconds
-        
+
         self.pid_controller = PIDController(0.25, 0.1, 0.2, 10) # PID controller object initialized with kP, kI, kD, kS
+
+        # Improvement: PID tuning
+        # self.pid_controller = PIDController(0.25, 0.15, 0.2, 10) # PID controller object initialized with kP, kI, kD, kS
 
     ########################
     '''Callback functions'''
@@ -124,6 +127,9 @@ class RobotController(Node):
             # Perception
             width, height, channels = self.cv_image.shape # Get image shape (width, height, channels)
             crop = self.cv_image[int((width/2)+110):int((width/2)+120)][1:int(height)] # Crop unwanted parts of the image
+            
+            # Improvement: thicker crop line
+            # crop = self.cv_image[int((width/2)+100):int((width/2)+130)][1:int(height)] # Crop unwanted parts of the image
             
             hsv = cv2.cvtColor(crop, cv2.COLOR_BGR2HSV) # Convert from RGB to HSV color space
             lower_yellow = np.array([50, 0, 0]) # Lower HSV threshold for yellow color
