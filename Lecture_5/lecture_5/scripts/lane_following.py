@@ -104,7 +104,7 @@ class RobotController(Node):
         self.ctrl_msg = Twist() # Robot control commands (twist)
         self.start_time = self.get_clock().now() # Record current time in seconds
         
-        self.pid_controller = PIDController(0.25, 0.01, 0.2, 10) # PID controller object initialized with kP, kI, kD, kS
+        self.pid_controller = PIDController(0.25, 0.1, 0.2, 10) # PID controller object initialized with kP, kI, kD, kS
 
     ########################
     '''Callback functions'''
@@ -143,7 +143,7 @@ class RobotController(Node):
             cv2.waitKey(1)
 
             # Planning
-            error = (width/2 - cx + 10)/175 # Calculate error (deviation) from lane center
+            error = -1 * (width/2 - cx + 10)/175 # Calculate error (deviation) from lane center
             tstamp = time.time() # Current timestamp (s)
 
             # Control
@@ -152,7 +152,7 @@ class RobotController(Node):
             self.ctrl_msg.linear.x = LIN_VEL # Set linear velocity
             self.ctrl_msg.angular.z = ANG_VEL # Set angular velocity
 
-            # self.robot_ctrl_pub.publish(self.ctrl_msg) # Publish robot controls message
+            self.robot_ctrl_pub.publish(self.ctrl_msg) # Publish robot controls message
             print('Deviation from lane center {}'.format(error))
             print('Robot moving with {} m/s and {} rad/s'.format(LIN_VEL, ANG_VEL))
         else:
