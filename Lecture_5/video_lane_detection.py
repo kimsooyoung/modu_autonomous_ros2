@@ -1,3 +1,5 @@
+# pip install moviepy==1.0.3
+
 from moviepy import *
 from moviepy.editor import VideoFileClip
 
