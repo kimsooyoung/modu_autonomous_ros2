@@ -13,7 +13,7 @@
 # limitations under the License.
 
 """
-This is a Gazebo environment launch file for a line-tracing example using TurtleBot.
+This is a Gazebo environment launch file for a obstable avoidance example using TurtleBot.
 """
 
 import os
@@ -35,8 +35,8 @@ def generate_launch_description():
     # gazebo
     pkg_gazebo_ros = FindPackageShare(package='gazebo_ros').find('gazebo_ros')   
     turtlebot3_gazebo = os.path.join(get_package_share_directory('turtlebot3_gazebo'))
-    pkg_path = os.path.join(get_package_share_directory('lecture_6'))
-    world_path = os.path.join(pkg_path, 'worlds', 'lane_keeping.sdf')
+    pkg_path = os.path.join(get_package_share_directory('lecture_7'))
+    world_path = os.path.join(pkg_path, 'worlds', 'obstacle_avoidance.sdf')
 
     # Start Gazebo server
     start_gazebo_server_cmd = IncludeLaunchDescription(
@@ -55,7 +55,7 @@ def generate_launch_description():
     )
 
     # launch RViz
-    rviz_config_file = os.path.join(pkg_path, 'rviz', 'lane_keeping.rviz')
+    rviz_config_file = os.path.join(pkg_path, 'rviz', 'obstacle_avoidance.rviz')
     rviz = Node(
         package='rviz2',
         executable='rviz2',
