@@ -28,7 +28,7 @@ from rclpy.node import Node
 from turtlesim.msg import Pose
 
 
-class PoseSubTwistPubNode(Node):
+class MimicNode(Node):
     """turtlesim/Pose msg Subscriber Node.
 
     This node will listen pose topic from turtlesim.
@@ -40,14 +40,16 @@ class PoseSubTwistPubNode(Node):
 
         You must type name of the node in inheritanced initializer.
         """
-        super().__init__('pose_sub_twist_pub_node')
+        super().__init__('mimic_node')
         queue_size = 10  # Queue Size
 
         # Create publisher & subscriber at the same time.
         # Look carefully at below two lines.
-        self.twist_publisher = self.create_publisher(Twist, '/turtle2/cmd_vel', queue_size)
-        self.subscriber = self.create_subscription(
-            Pose, 'turtle1/pose', self.sub_callback, queue_size
+        self.twist_publisher = self.create_publisher(
+            Twist, '/turtle2/cmd_vel', queue_size
+        )
+        self.twist_subscriber = self.create_subscription(
+            Twist, '/turtle1/cmd_vel', self.sub_callback, queue_size
         )
 
         self.get_logger().warn('The turtle imitation has started. Please try moving the first turtle using teleop!')
@@ -60,23 +62,21 @@ class PoseSubTwistPubNode(Node):
         """
         pub_msg = Twist()
         # Put subscribed msg into publish msg as it is.
-        pub_msg.linear.x = msg.linear_velocity
-        pub_msg.angular.z = msg.angular_velocity
+        pub_msg.linear.x = msg.linear.x
+        pub_msg.angular.z = msg.angular.z 
 
         self.twist_publisher.publish(pub_msg)
-        self.get_logger().info(f"""x : {msg.x:.3f} / y : {msg.y:.3f} / z : {msg.theta:.3f}
-        linear_velocity : {msg.linear_velocity} / angular_velocity : {msg.angular_velocity }""")
 
 
 def main(args=None):
     """Do enter into this main function first."""
     rclpy.init(args=args)
 
-    laser_subscriber = PoseSubTwistPubNode()
+    mimic_node = MimicNode()
 
-    rclpy.spin(laser_subscriber)
+    rclpy.spin(mimic_node)
 
-    laser_subscriber.destroy_node()
+    mimic_node.destroy_node()
     rclpy.shutdown()
 
 
