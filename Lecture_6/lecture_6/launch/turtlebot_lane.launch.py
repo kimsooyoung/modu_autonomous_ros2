@@ -43,10 +43,6 @@ def generate_launch_description():
         PythonLaunchDescriptionSource(os.path.join(pkg_gazebo_ros, 'launch', 'gzclient.launch.py'))
     )
 
-    start_gazebo_client_cmd = IncludeLaunchDescription(
-        PythonLaunchDescriptionSource(os.path.join(pkg_gazebo_ros, 'launch', 'gzclient.launch.py'))
-    )
-
     # turtlebot robot_state_publisher
     tb_robot_state_publisher = IncludeLaunchDescription(
         PythonLaunchDescriptionSource(os.path.join(turtlebot3_gazebo, 'launch', 'robot_state_publisher.launch.py'))
