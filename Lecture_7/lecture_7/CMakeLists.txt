@@ -42,6 +42,7 @@ ament_python_install_package(${PROJECT_NAME})
 install(
   PROGRAMS
     scripts/obstacle_avoidance.py
+    scripts/wall_following.py
   DESTINATION 
     lib/${PROJECT_NAME}
 )
