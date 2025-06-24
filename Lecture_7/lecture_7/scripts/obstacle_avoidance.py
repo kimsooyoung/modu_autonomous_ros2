@@ -3,8 +3,10 @@
 # ROS2 module imports
 import rclpy
 from rclpy.node import Node
+from std_msgs.msg import Float64
 from geometry_msgs.msg import Twist
 from sensor_msgs.msg import LaserScan
+
 from rclpy.qos import QoSProfile, QoSReliabilityPolicy, QoSHistoryPolicy
 from rclpy.duration import Duration
 
@@ -72,20 +74,32 @@ class RobotController(Node):
             '/cmd_vel',
             qos_profile
         )
+        self.lin_vel_pub = self.create_publisher(
+            Float64,
+            '/lin_vel',
+            qos_profile
+        )
+        self.ang_vel_pub = self.create_publisher(
+            Float64,
+            '/ang_vel',
+            qos_profile
+        )
         timer_period = 0.001
         self.timer = self.create_timer(timer_period, self.robot_controller_callback)
 
         self.laserscan = []
         self.ctrl_msg = Twist()
+        self.lin_vel_msg = Float64()
+        self.ang_vel_msg = Float64()
         self.start_time = self.get_clock().now()
 
         # ==================== PART 1: Initialize your PID controller ====================
         # TODO: Set kP, kI, kD, kS appropriately
         self.pid_lat = PIDController(
-            0.0, 0.0, 0.0, 10  # TODO: Fill in lateral kP, kI, kD
+            0.2, 0.0, 0.0, 10  # TODO: Fill in lateral kP, kI, kD
         )
         self.pid_lon = PIDController(
-            0.0, 0.0, 0.0, 10  # TODO: Fill in longitudinal kP, kI, kD
+            0.1, 0.0, 0.0, 10  # TODO: Fill in longitudinal kP, kI, kD
         )
 
     def robot_laserscan_callback(self, msg):
@@ -108,6 +122,15 @@ class RobotController(Node):
 
             LIN_VEL = 0.0
             ANG_VEL = 0.0
+
+            # # PID Tuning and Debugging Example - Uncomment below lines for test
+            # LIN_VEL = self.pid_lon.control(min(3.5, self.laserscan[0]), tstamp)
+            # self.lin_vel_msg.data = LIN_VEL
+            # self.lin_vel_pub.publish(self.lin_vel_msg)
+
+            # ANG_VEL = self.pid_lat.control(0.2, tstamp)
+            # self.ang_vel_msg.data = ANG_VEL
+            # self.ang_vel_pub.publish(self.ang_vel_msg)
 
             # =============== PART 3: Avoidance Logic Design ===============
             # Guidelines for students:
