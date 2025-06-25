@@ -32,6 +32,11 @@ def generate_launch_description():
     else:
         pass
 
+    if 'GAZEBO_MODEL_PATH' not in os.environ:
+        os.environ['GAZEBO_MODEL_PATH'] = os.path.join(get_package_share_directory('lecture_8'), 'models')
+    else:
+        os.environ['GAZEBO_MODEL_PATH'] += ":" + os.path.join(get_package_share_directory('lecture_8'), 'models')
+
     # gazebo
     pkg_gazebo_ros = FindPackageShare(package='gazebo_ros').find('gazebo_ros')   
     turtlebot3_gazebo = os.path.join(get_package_share_directory('turtlebot3_gazebo'))

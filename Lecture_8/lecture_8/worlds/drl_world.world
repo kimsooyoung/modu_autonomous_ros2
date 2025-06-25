@@ -52,7 +52,7 @@
     </physics>
 
     <include>
-      <uri>model://turtlebot3_waffle</uri>
+      <uri>model://turtlebot3_waffle_drl</uri>
     </include>
 
     <include>
