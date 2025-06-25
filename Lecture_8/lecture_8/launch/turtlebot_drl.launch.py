@@ -36,7 +36,7 @@ def generate_launch_description():
     pkg_gazebo_ros = FindPackageShare(package='gazebo_ros').find('gazebo_ros')   
     turtlebot3_gazebo = os.path.join(get_package_share_directory('turtlebot3_gazebo'))
     pkg_path = os.path.join(get_package_share_directory('lecture_8'))
-    world_path = os.path.join(pkg_path, 'worlds', 'drl_world.sdf')
+    world_path = os.path.join(pkg_path, 'worlds', 'drl_world.world')
 
     # Start Gazebo server
     start_gazebo_server_cmd = IncludeLaunchDescription(
@@ -55,7 +55,7 @@ def generate_launch_description():
     )
 
     # launch RViz
-    rviz_config_file = os.path.join(pkg_path, 'rviz', 'obstacle_avoidance.rviz')
+    rviz_config_file = os.path.join(pkg_path, 'rviz', 'rl_gazebo.rviz')
     rviz = Node(
         package='rviz2',
         executable='rviz2',
