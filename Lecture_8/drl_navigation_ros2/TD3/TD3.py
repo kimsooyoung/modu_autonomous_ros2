@@ -69,9 +69,9 @@ class TD3(object):
         lr=1e-4,
         save_every=0,
         load_model=False,
-        save_directory=Path("drl_navigation_ros2/models/TD3"),
         model_name="TD3",
-        load_directory=Path("drl_navigation_ros2/models/TD3"),
+        save_directory=None,
+        load_directory=None,
     ):
         # Initialize the Actor network
         self.device = device
@@ -95,7 +95,17 @@ class TD3(object):
             self.load(filename=model_name, directory=load_directory)
         self.save_every = save_every
         self.model_name = model_name
-        self.save_directory = save_directory
+        self.best_avg_Q = -float('inf')
+
+        if save_directory is None:
+            self.save_directory = Path("drl_navigation_ros2/models/TD3")
+        else:
+            self.save_directory = Path(save_directory)
+
+        if load_directory is None:
+            self.load_directory = Path("drl_navigation_ros2/models/TD3")
+        else:
+            self.load_directory = Path(load_directory)
 
     def get_action(self, obs, add_noise):
         if add_noise:
@@ -200,15 +210,30 @@ class TD3(object):
                     )
 
             av_loss += loss
+
         self.iter_count += 1
         # Write new values for tensorboard
         self.writer.add_scalar("train/loss", av_loss / iterations, self.iter_count)
         self.writer.add_scalar("train/avg_Q", av_Q / iterations, self.iter_count)
         self.writer.add_scalar("train/max_Q", max_Q, self.iter_count)
-        if self.save_every > 0 and self.iter_count % self.save_every == 0:
+        
+        # Compute average Q and average loss
+        avg_Q_epoch = (av_Q / iterations).item()  # detach to get a number
+        avg_loss_epoch = (av_loss / iterations).item()
+
+        # Save best model based on highest avg_Q or lowest avg_loss
+        # (Here I save the best model according to average Q)
+        if avg_Q_epoch > self.best_avg_Q:
+            self.best_avg_Q = avg_Q_epoch
             if not os.path.exists(self.save_directory):
                 os.makedirs(self.save_directory, exist_ok=True)
-            self.save(filename=self.model_name, directory=self.save_directory)
+            self.save(filename=f"{self.model_name}_best", directory=self.save_directory)
+            print(f"✅ Best model saved with avg_Q={avg_Q_epoch:.4f}")
+
+        # if self.save_every > 0 and self.iter_count % self.save_every == 0:
+        #     if not os.path.exists(self.save_directory):
+        #         os.makedirs(self.save_directory, exist_ok=True)
+        #     self.save(filename=self.model_name, directory=self.save_directory)
 
     def save(self, filename, directory):
         torch.save(self.actor.state_dict(), "%s/%s_actor.pth" % (directory, filename))

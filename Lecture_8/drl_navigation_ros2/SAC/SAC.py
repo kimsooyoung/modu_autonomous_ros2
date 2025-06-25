@@ -35,9 +35,9 @@ class SAC(object):
         save_every=0,
         load_model=False,
         log_dist_and_hist = False,
-        save_directory=Path("drl_navigation_ros2/models/SAC"),
         model_name="SAC",
-        load_directory=Path("drl_navigation_ros2/models/SAC"),
+        save_directory=None,
+        load_directory=None,
     ):
         super().__init__()
 
@@ -52,7 +52,17 @@ class SAC(object):
         self.learnable_temperature = learnable_temperature
         self.save_every = save_every
         self.model_name = model_name
-        self.save_directory = save_directory
+
+        if save_directory is None:
+            self.save_directory = Path("drl_navigation_ros2/models/SAC")
+        else:
+            self.save_directory = Path(save_directory)
+
+        if load_directory is None:
+            self.load_directory = Path("drl_navigation_ros2/models/SAC")
+        else:
+            self.load_directory = Path(load_directory)
+
         self.log_dist_and_hist = log_dist_and_hist
 
         self.train_metrics_dict = { "train_critic/loss_av": [],
