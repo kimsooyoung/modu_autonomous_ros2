@@ -95,6 +95,7 @@ class TD3(object):
             self.load(filename=model_name, directory=load_directory)
         self.save_every = save_every
         self.model_name = model_name
+        self.best_avg_loss = float('inf')
         self.best_avg_Q = -float('inf')
 
         if save_directory is None:
@@ -223,12 +224,13 @@ class TD3(object):
 
         # Save best model based on highest avg_Q or lowest avg_loss
         # (Here I save the best model according to average Q)
-        if avg_Q_epoch > self.best_avg_Q:
-            self.best_avg_Q = avg_Q_epoch
-            if not os.path.exists(self.save_directory):
-                os.makedirs(self.save_directory, exist_ok=True)
-            self.save(filename=f"{self.model_name}_best", directory=self.save_directory)
-            print(f"✅ Best model saved with avg_Q={avg_Q_epoch:.4f}")
+        if self.save_every > 0 and self.iter_count % self.save_every == 0:
+            if avg_loss_epoch > self.best_avg_loss:
+                self.best_avg_loss = avg_loss_epoch
+                if not os.path.exists(self.save_directory):
+                    os.makedirs(self.save_directory, exist_ok=True)
+                self.save(filename=f"{self.model_name}_best", directory=self.save_directory)
+                print(f"✅ Best model saved with avg_Q={avg_Q_epoch:.4f}")
 
         # if self.save_every > 0 and self.iter_count % self.save_every == 0:
         #     if not os.path.exists(self.save_directory):

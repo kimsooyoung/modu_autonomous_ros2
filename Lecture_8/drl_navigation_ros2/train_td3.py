@@ -76,7 +76,6 @@ def main(args=None):
     )  # get the initial step state
 
     while epoch < max_epochs:  # train until max_epochs is reached
-        # print(f"EPOCH: {epoch}")
         
         state, terminal = model.prepare_state(
             latest_scan, distance, cos, sin, collision, goal, a

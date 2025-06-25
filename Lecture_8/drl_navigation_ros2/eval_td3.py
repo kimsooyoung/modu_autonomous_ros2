@@ -29,6 +29,7 @@ def main(args=None):
         device=device,
         save_every=save_every,
         load_model=True,
+        load_directory="drl_navigation_ros2/models/TD3_pretrained",
     )  # instantiate a model
 
     ros = ROS_env()  # instantiate ROS environment
