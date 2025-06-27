@@ -27,19 +27,18 @@ class ROS_env:
     ):
         rclpy.init(args=args)
         self.cmd_vel_publisher = CmdVelPublisher()
-        self.scan_subscriber = ScanSubscriber()
-        self.odom_subscriber = OdomSubscriber()
         self.robot_state_publisher = SetModelStateClient()
         self.world_reset = ResetWorldClient()
         self.physics_client = PhysicsClient()
         self.publish_target = MarkerPublisher()
+        self.sensor_subscriber = SensorSubscriber()
+
         self.element_positions = [
             [-2.93, 3.17],
             [2.86, -3.0],
             [-2.77, -0.96],
             [2.83, 2.93],
         ]
-        self.sensor_subscriber = SensorSubscriber()
         self.target_dist = init_target_distance
         self.target_dist_increase = target_dist_increase
         self.max_target_dist = max_target_dist
