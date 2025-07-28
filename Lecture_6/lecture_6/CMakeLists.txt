@@ -42,6 +42,7 @@ ament_python_install_package(${PROJECT_NAME})
 install(
   PROGRAMS
     scripts/lane_following.py
+    scripts/lane_following_solution.py
     scripts/my_py_node.py
   DESTINATION 
     lib/${PROJECT_NAME}

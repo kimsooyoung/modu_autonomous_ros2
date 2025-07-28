@@ -25,7 +25,6 @@ Make turtle2 following turtle1.
 from geometry_msgs.msg import Twist
 import rclpy
 from rclpy.node import Node
-from turtlesim.msg import Pose
 
 
 class MimicNode(Node):
